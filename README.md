@@ -58,7 +58,7 @@ LLM-Knowledge-Writer is an advanced document generation and knowledge base QA sy
    - 短篇小说生成器支持一次性生成结构完整的短篇小说
 
 3. **RAG知识库与问答**
-   - 支持文档知识库的管理、向量化、检索与问答
+   - 支持文档知识库的管理、向量化、检索与问答（**多文档检索会先对每篇文档进行相似度检索然后对所有结果进行reranker重排**）
    - 支持基于历史文档内容的智能问答，检索结果可视化
    - 支持知识库检索与文档管理一体化界面
 
@@ -87,7 +87,7 @@ LLM-Knowledge-Writer is an advanced document generation and knowledge base QA sy
        ```bash
        export DEEPSEEK_API_KEY="你的deepseek API密钥"
        ```
-   - 推荐同时配置 `SILICON_API_KEY` 和 `DEEPSEEK_API_KEY`，以获得最佳体验。
+   - 推荐同时配置 `SILICON_API_KEY` 和 `DEEPSEEK_API_KEY`，以获得最佳体验。（其实不配置这俩根本用不了，百度搜索的API不配置也没关系）
 
 2. **启动应用**
    - 运行主界面：`streamlit run ai_assistant.py`

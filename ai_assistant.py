@@ -1,16 +1,15 @@
 # lllm_calss_project/ai_assistant.py
 import streamlit as st
 import os
-from database_utils import DocumentDatabase
 import importlib
 import inspect
-from base_generator import BaseGenerator
 import pyperclip
 import datetime
 import time
-from knowledge_base import render_knowledge_base_ui
-from knowledge_chat_ui import render_knowledge_chat_ui
-
+from utils.database_utils import DocumentDatabase
+from generators.base_generator import BaseGenerator
+from chat.knowledge_base import render_knowledge_base_ui
+from chat.knowledge_chat_ui import render_knowledge_chat_ui
 # 设置页面配置
 st.set_page_config(
     page_title="AI助手",
@@ -44,14 +43,17 @@ def load_generators():
     """
     generators = {}
     import glob
-    for file in glob.glob("*.py"):
-        if file == "base_generator.py" or file == "ai_assistant.py":
+    import os
+
+    # 只递归查找generators目录下的py文件
+    for file in glob.glob("generators/*.py"):
+        if file.endswith("__init__.py") or file.endswith("base_generator.py"):
             continue
-        
-        module_name = file[:-3]
+
+        # 转换为包路径
+        module_name = file.replace("/", ".").replace("\\", ".")[:-3]  # 兼容Windows和Linux
         try:
             module = importlib.import_module(module_name)
-            
             for name, obj in inspect.getmembers(module):
                 if (inspect.isclass(obj) and 
                     issubclass(obj, BaseGenerator) and 
@@ -59,7 +61,6 @@ def load_generators():
                     generators[name] = obj
         except Exception as e:
             st.error(f"加载生成器 {module_name} 失败: {str(e)}")
-    
     return generators
 
 def get_document_title(user_input: dict, generator_name: str) -> str:
